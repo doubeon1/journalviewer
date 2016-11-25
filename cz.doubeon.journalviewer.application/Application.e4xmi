@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_WBFnMIkKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ide.application" bindingContexts="_WBFnMYkKEeKY361jnQhjWQ">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_WBFnR4kKEeKY361jnQhjWQ" elementId="cz.doubeon.journalviewer.application.mainwindow" selectedElement="_WBFnT4kKEeKY361jnQhjWQ" label="Prohlížeč žurnálu" x="-1" y="-1" width="650" height="800">
+    <children xsi:type="advanced:PerspectiveStack" xmi:id="_WBFnT4kKEeKY361jnQhjWQ">
+      <children xsi:type="advanced:Perspective" xmi:id="_WBFnUIkKEeKY361jnQhjWQ">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_WBFnUYkKEeKY361jnQhjWQ" elementId="cz.doubeon.journalviewer.application.partsashcontainer.upper" containerData="" accessibilityPhrase="" selectedElement="_WBFnUokKEeKY361jnQhjWQ">
+          <children xsi:type="basic:PartStack" xmi:id="_WBFnUokKEeKY361jnQhjWQ" containerData="15">
+            <children xsi:type="basic:Part" xmi:id="_vZlr8IqIEeKXLs5qi-lPDg" elementId="cz.doubeon.journalviewer.application.part.cashdeskselection" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.part.CashDeskSelectionPart" label="Pokladna a datum"/>
+          </children>
+          <children xsi:type="basic:PartSashContainer" xmi:id="_0gYi8ChbEeSbm46BRCypOw" elementId="cz.doubeon.journalviewer.application.partsashcontainer.1" containerData="85" horizontal="true">
+            <children xsi:type="basic:PartStack" xmi:id="_bYjGYChcEeSbm46BRCypOw" elementId="cz.doubeon.journalviewer.application.partstack.0" containerData="60">
+              <children xsi:type="basic:Part" xmi:id="_1v0KgChbEeSbm46BRCypOw" elementId="cz.doubeon.journalviewer.application.part.receiptlist" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.part.ReceiptListPart" label="Seznam účtenek"/>
+            </children>
+            <children xsi:type="basic:PartStack" xmi:id="_y5KRAChcEeSbm46BRCypOw" elementId="cz.doubeon.journalviewer.application.partstack.1" containerData="40">
+              <children xsi:type="basic:Part" xmi:id="_1H-ucChbEeSbm46BRCypOw" elementId="cz.doubeon.journalviewer.application.part.receiptdetail" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.part.ReceiptDetailPart" label="Detail"/>
+            </children>
+          </children>
+        </children>
+      </children>
+    </children>
+    <mainMenu xmi:id="_WBFnSIkKEeKY361jnQhjWQ" elementId="menu:org.eclipse.ui.main.menu">
+      <children xsi:type="menu:Menu" xmi:id="_WBFnSYkKEeKY361jnQhjWQ" label="Soubor">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_WBFnSokKEeKY361jnQhjWQ" label="Aktualizace" iconURI="platform:/plugin/cz.doubeon.journalviewer.application/icons/arrow-refresh.png" tooltip="Aktualizace databáze žurnálů" command="_6DQJsJ8KEeKwgNY6x5aXqw"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_WBFnTokKEeKY361jnQhjWQ" label="Nastavení" command="_WBFnRIkKEeKY361jnQhjWQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_WBFnTIkKEeKY361jnQhjWQ" label="Konec" command="_WBFnOokKEeKY361jnQhjWQ"/>
+      </children>
+      <children xsi:type="menu:Menu" xmi:id="_WBFnTYkKEeKY361jnQhjWQ" label="Nápověda"/>
+    </mainMenu>
+    <trimBars xmi:id="_WBFnU4kKEeKY361jnQhjWQ">
+      <children xsi:type="menu:ToolBar" xmi:id="_WBFnVIkKEeKY361jnQhjWQ" elementId="toolbar:org.eclipse.ui.main.toolbar">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_WBFnVYkKEeKY361jnQhjWQ" iconURI="platform:/plugin/cz.doubeon.journalviewer.application/icons/arrow-refresh.png" tooltip="Aktualizace databáze pokladních žurnálů" command="_6DQJsJ8KEeKwgNY6x5aXqw"/>
+      </children>
+    </trimBars>
+  </children>
+  <handlers xmi:id="_WBFnO4kKEeKY361jnQhjWQ" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.handlers.QuitHandler" command="_WBFnOokKEeKY361jnQhjWQ"/>
+  <handlers xmi:id="_WBFnRYkKEeKY361jnQhjWQ" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.handlers.PrefsHandler" command="_WBFnRIkKEeKY361jnQhjWQ"/>
+  <handlers xmi:id="_xIHasJ8KEeKwgNY6x5aXqw" elementId="cz.doubeon.journalviewer.application.handler.update" contributionURI="bundleclass://cz.doubeon.journalviewer.application/cz.doubeon.journalviewer.handlers.UpdateHandler" command="_6DQJsJ8KEeKwgNY6x5aXqw"/>
+  <bindingTables xmi:id="_WBFnPIkKEeKY361jnQhjWQ" bindingContext="_WBFnMYkKEeKY361jnQhjWQ">
+    <bindings xmi:id="_WBFnPYkKEeKY361jnQhjWQ" keySequence="M1+Q" command="_WBFnOokKEeKY361jnQhjWQ"/>
+    <bindings xmi:id="_WBFnQIkKEeKY361jnQhjWQ" keySequence="M1+O"/>
+    <bindings xmi:id="_WBFnQ4kKEeKY361jnQhjWQ" keySequence="M1+S"/>
+    <bindings xmi:id="_WBFnRokKEeKY361jnQhjWQ" keySequence="M1+A" command="_WBFnRIkKEeKY361jnQhjWQ"/>
+  </bindingTables>
+  <rootContext xmi:id="_WBFnMYkKEeKY361jnQhjWQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
+    <children xmi:id="_WBFnMokKEeKY361jnQhjWQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
+    <children xmi:id="_WBFnM4kKEeKY361jnQhjWQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
+  </rootContext>
+  <commands xmi:id="_WBFnOokKEeKY361jnQhjWQ" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
+  <commands xmi:id="_WBFnRIkKEeKY361jnQhjWQ" elementId="org.eclipse.ui.help.prefsAction" commandName="prefsCommand"/>
+  <commands xmi:id="_6DQJsJ8KEeKwgNY6x5aXqw" elementId="cz.doubeon.journalviewer.application.command.update" commandName="updateCommand"/>
+  <addons xmi:id="_WBFnNIkKEeKY361jnQhjWQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_WBFnNYkKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_WBFnNokKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_WBFnN4kKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_WBFnOIkKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_WBFnOYkKEeKY361jnQhjWQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+  <addons xmi:id="_e3mMgGR5EeKSBuqN6T0XkQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+</application:Application>
