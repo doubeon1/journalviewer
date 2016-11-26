@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -39,9 +38,9 @@ import cz.doubeon.journalviewer.services.CashDeskService;
 public class ReceiptListPart {
 	private static final String NOT_AVAILABLE = "n/a";
 
-	private IObservableValue<CashDesk> cashDesk;
-	private IObservableValue<Date> date;
-	private Consumer<List<Receipt>> reloader = (rcpts) -> {
+	private IObservableValue<CashDesk> oCashDesk;
+	private IObservableValue<Date> oDate;
+	private Runnable reloader = () -> {
 		//
 	};
 	private Runnable onFocus = () -> {
@@ -56,19 +55,22 @@ public class ReceiptListPart {
 
 	@Inject
 	public void bindCashDesk(@Named(AppConstants.CTX_CASHDESK_OBSERVABLE) IObservableValue<CashDesk> cashDesk) {
-		this.cashDesk = cashDesk;
-		cashDesk.addValueChangeListener(
-				event -> reloader.accept(getReceipts(date.getValue(), event.diff.getNewValue())));
+		this.oCashDesk = cashDesk;
+		cashDesk.addValueChangeListener(event -> reloader.run());
 	}
 
 	@Inject
 	public void bindDate(@Named(AppConstants.CTX_DATE_OBSERVABLE) IObservableValue<Date> date) {
-		this.date = date;
-		date.addValueChangeListener(
-				event -> reloader.accept(getReceipts(event.diff.getNewValue(), cashDesk.getValue())));
+		this.oDate = date;
+		date.addValueChangeListener(event -> reloader.run());
 	}
 
-	private List<Receipt> getReceipts(Date date, CashDesk cashDesk) {
+	private List<Receipt> getReceipts() {
+		if (oCashDesk == null || oDate == null) {
+			return Collections.emptyList();
+		}
+		final CashDesk cashDesk = oCashDesk.getValue();
+		final Date date = oDate.getValue();
 		if (cashDesk == null || date == null) {
 			return Collections.emptyList();
 		}
@@ -166,15 +168,15 @@ public class ReceiptListPart {
 		context.modify(AppConstants.CTX_RECEIPT_OBSERVABLE,
 				ViewersObservables.observeSingleSelection(receiptsViewer));
 		//
-		reloader = (rcpts) -> {
-				receiptsViewer.setInput(rcpts);
+		reloader = () -> {
+			final List<Receipt> rcpts = getReceipts();
+			receiptsViewer.setInput(rcpts);
 				BigDecimal total = BigDecimal.ZERO;
 				for (final Receipt rcpt : rcpts) {
 					total = total.add(rcpt.getTotal() != null ? rcpt.getTotal() : BigDecimal.ZERO);
 				}
 				lblTotal.setText(Formatters.CURRENCY.get().format(total) + " Kč");
 		};
-		//
 		onFocus = () -> receiptsViewer.getControl().setFocus();
 	}
 

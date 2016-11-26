@@ -77,7 +77,6 @@ public class CashDeskSelectionPart {
 		context.modify(AppConstants.CTX_DATE_OBSERVABLE, dateTimeObservable);
 		//
 		updater = cds -> cashViewer.setInput(cds);
-		//
 		onFocus = () -> cashViewer.getControl().setFocus();
 	}
 

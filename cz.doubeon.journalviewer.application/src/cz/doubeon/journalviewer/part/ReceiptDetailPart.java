@@ -47,17 +47,17 @@ public class ReceiptDetailPart {
 		container.setLayout(new GridLayout(1, false));
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		final TableViewer detailsViewer = new TableViewer(container,
+		final TableViewer viewer = new TableViewer(container,
 				SWT.MULTI | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-		detailsViewer.setContentProvider(ArrayContentProvider.getInstance());
-		final Table table = detailsViewer.getTable();
+		viewer.setContentProvider(ArrayContentProvider.getInstance());
+		final Table table = viewer.getTable();
 		final GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true);
 		table.setLayoutData(gd);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
 		// text
-		TableViewerColumn col = new TableViewerColumn(detailsViewer, SWT.NONE);
+		TableViewerColumn col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText("Text");
 		col.getColumn().setWidth(100);
 		col.setLabelProvider(new ColumnLabelProvider() {
@@ -69,7 +69,7 @@ public class ReceiptDetailPart {
 		});
 
 		// mnozstvi
-		col = new TableViewerColumn(detailsViewer, SWT.NONE);
+		col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText("Množství");
 		col.getColumn().setWidth(60);
 		col.getColumn().setAlignment(SWT.RIGHT);
@@ -82,7 +82,7 @@ public class ReceiptDetailPart {
 		});
 
 		// cena
-		col = new TableViewerColumn(detailsViewer, SWT.NONE);
+		col = new TableViewerColumn(viewer, SWT.NONE);
 		col.getColumn().setText("Cena");
 		col.getColumn().setWidth(70);
 		col.getColumn().setAlignment(SWT.RIGHT);
@@ -103,10 +103,8 @@ public class ReceiptDetailPart {
 			}
 		});
 		//
-		itemSetter = items -> detailsViewer.setInput(items);
-		//
-		//
-		onFocus = () -> detailsViewer.getControl().setFocus();
+		itemSetter = items -> viewer.setInput(items);
+		onFocus = () -> viewer.getControl().setFocus();
 	}
 
 	public void focus() {
