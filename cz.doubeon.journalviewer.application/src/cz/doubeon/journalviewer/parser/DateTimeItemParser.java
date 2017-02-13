@@ -8,7 +8,7 @@ import cz.doubeon.journalviewer.punits.Receipt;
 
 class DateTimeItemParser implements IItemParser {
 	private static final SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yy HH:mm");
-	private static final String PATTERN = "^ ?\\d{1,2}- ?\\d{1,2}- ?\\d{1,2} \\d  ?\\d{1,2}:\\d{2} $";
+	private static final String PATTERN = "^\\s?\\d{1,2}- ?\\d{1,2}- ?\\d{1,2} \\d  ?\\d{1,2}:\\d{2}\\s+$";
 
 	private static Date parseDate(String text) {
 		final String dateString = text.substring(0, 8).replace(' ', '0') +

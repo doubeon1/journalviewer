@@ -89,8 +89,7 @@ public class CashDeskSelectionPart {
 		@Override
 		public String getText(Object element) {
 			if (element instanceof CashDesk) {
-				final CashDesk cd = (CashDesk) element;
-				return cd.getDescription();
+				return ((CashDesk) element).getDescription();
 			}
 			return super.getText(element);
 		}

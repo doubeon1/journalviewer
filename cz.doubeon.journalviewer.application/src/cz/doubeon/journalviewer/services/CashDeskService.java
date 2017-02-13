@@ -5,7 +5,6 @@ import static cz.doubeon.journalviewer.AppConstants.PREF_JOURNAL_PATH;
 import static cz.doubeon.journalviewer.AppConstants.PREF_PLUGIN_NAME;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,13 +16,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -66,17 +66,14 @@ public class CashDeskService {
 	}
 
 	private static List<File> getDirectoryContent(File folder) {
-		final File[] files = folder.listFiles((FileFilter) file -> {
-			if (!file.isDirectory() && file.getName().toLowerCase().endsWith(".csv")) {
-				return true;
-			}
-			return false;
-		});
+		File[] files = folder
+				.listFiles(file -> !file.isDirectory() && file.getName().toLowerCase().endsWith(".csv"));
 		if (files == null) {
-			return Collections.emptyList();
+			files = new File[0];
 		}
-		Arrays.sort(files, (o1, o2) -> o1.getName().compareTo(o2.getName()));
-		return Arrays.asList(files);
+		return Stream.of(files)
+				.sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+				.collect(Collectors.toList());
 	}
 
 	private List<File> getJournalsToParse(CashDesk cashDesk, EntityManager em) {
@@ -268,10 +265,11 @@ public class CashDeskService {
 		@Override
 		public String next() {
 			if (!hasNext()) {
-				return null;
+				throw new NoSuchElementException();
 			}
 			readNext = false;
-			return nextRow[col];
+			final String val = nextRow[col];
+			return val == null ? "" : val;
 		}
 
 		@Override
