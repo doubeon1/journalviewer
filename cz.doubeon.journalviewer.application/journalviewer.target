@@ -6,8 +6,8 @@
 <repository location="http://download.eclipse.org/rt/eclipselink/updates/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.0.0.201702081352"/>
-<unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201702081352"/>
+<unit id="org.eclipse.nebula.widgets.cdatetime.feature.feature.group" version="1.0.0.201702151232"/>
+<unit id="org.eclipse.nebula.cwt.feature.feature.group" version="1.0.0.201702151232"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">

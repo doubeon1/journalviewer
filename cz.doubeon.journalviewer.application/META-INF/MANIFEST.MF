@@ -135,3 +135,4 @@ Export-Package: au.com.bytecode.opencsv,
  org.apache.derby.security,
  org.apache.derby.tools,
  org.apache.derby.vti
+Bundle-ActivationPolicy: lazy
