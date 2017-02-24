@@ -1,9 +1,11 @@
 package cz.doubeon.journalviewer.parser;
 
 public interface IParserContext {
-	IItemCounter getItemCounter();
+	int getCounterAndIncrement();
 
 	void stopParsing();
 
 	void lastItem();
+
+	IBufferedLineIterator getIterator();
 }

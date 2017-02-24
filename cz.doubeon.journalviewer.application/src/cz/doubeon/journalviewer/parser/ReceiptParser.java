@@ -10,6 +10,8 @@ public class ReceiptParser {
 			new TotalCashItemParser(),
 			new TotalCardItemParser(),
 			new ItemWithPriceParser(),
+			new BKPParser(),
+			new FIKParser(),
 			new UnidentifiedItemParser() };
 
 	private ReceiptParser() {
@@ -17,12 +19,13 @@ public class ReceiptParser {
 	}
 
 	public static void parseReceipt(Receipt receipt, ILineIterator iter) {
-		final ParserContext ctx = new ParserContext();
-		while (!ctx.lastItem && iter.hasNext()) {
-			final String raw = iter.next();
+		final ParserContext ctx = new ParserContext(iter);
+		final IBufferedLineIterator bit = ctx.getIterator();
+		while (!ctx.lastItem && bit.hasNext()) {
+			bit.next();
 			ctx.enabledParsing = true;
 			for (final IItemParser parser : PARSERS) {
-				parser.tryToUpdate(receipt, raw, ctx);
+				parser.tryToUpdate(receipt, ctx);
 				if (ctx.lastItem || !ctx.enabledParsing) {
 					break;
 				}
@@ -33,19 +36,33 @@ public class ReceiptParser {
 	private static class ParserContext implements IParserContext {
 		private boolean enabledParsing;
 		private boolean lastItem;
+		private int counter = 1;
+		private final IBufferedLineIterator bit;
 
-		private final IItemCounter counter = new IItemCounter() {
-			int i = 1;
+		ParserContext(ILineIterator it) {
+			this.bit = new IBufferedLineIterator() {
+				private String curr;
 
-			@Override
-			public int getAndIncrement() {
-				return i++;
-			}
-		};
+				@Override
+				public void next() {
+					curr = it.next();
+				}
+
+				@Override
+				public boolean hasNext() {
+					return it.hasNext();
+				}
+
+				@Override
+				public String getCurrent() {
+					return curr;
+				}
+			};
+		}
 
 		@Override
-		public IItemCounter getItemCounter() {
-			return counter;
+		public int getCounterAndIncrement() {
+			return counter++;
 		}
 
 		@Override
@@ -57,5 +74,11 @@ public class ReceiptParser {
 		public void stopParsing() {
 			this.enabledParsing = false;
 		}
+
+		@Override
+		public IBufferedLineIterator getIterator() {
+			return bit;
+		}
+
 	};
 }

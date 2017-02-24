@@ -13,8 +13,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cz.doubeon.journalviewer.services.CashDeskService;
 
 public class SplashScreen {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CashDeskService.class);
 	private static final String URL_STRING = "platform:/plugin/cz.doubeon.journalviewer.application/resource/kasa.jpg";
 
 	private SplashScreen() {
@@ -33,7 +38,7 @@ public class SplashScreen {
 		try (InputStream is = new URL(URL_STRING).openStream()) {
 			img = new Image(display, is);
 		} catch (final IOException e) {
-			label.setText("Here should be a splash image.");
+			LOGGER.error("Error loading splash screen", e);
 		}
 		label.setImage(img);
 		label.addDisposeListener(e -> {

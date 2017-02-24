@@ -16,12 +16,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.doubeon.journalviewer.AppConstants;
 import cz.doubeon.journalviewer.services.CashDeskService;
 import cz.doubeon.journalviewer.utils.SplashScreen;
 
 public class LifeCycleManager {
+	private static final Logger LOGGER = LoggerFactory.getLogger(LifeCycleManager.class);
 
 	@PostContextCreate
 	public void postContextCreate(final IEventBroker eventBroker,
@@ -44,6 +47,7 @@ public class LifeCycleManager {
 		// close static splash screen
 		context.applicationRunning();
 		splash.open();
+		LOGGER.info("Context created.");
 	}
 
 	@ProcessAdditions

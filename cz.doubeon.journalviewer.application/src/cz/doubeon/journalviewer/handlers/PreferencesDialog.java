@@ -24,10 +24,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.osgi.service.prefs.BackingStoreException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cz.doubeon.journalviewer.AppConstants;
 
 public class PreferencesDialog extends TitleAreaDialog {
+	private static final Logger LOGGER = LoggerFactory.getLogger(PreferencesDialog.class);
+
 	private Text txtDbPath;
 	private Text txtDbName;
 	private Text txtJournalPath;
@@ -144,6 +148,7 @@ public class PreferencesDialog extends TitleAreaDialog {
 			prefs.flush();
 			super.okPressed();
 		} catch (final BackingStoreException e) {
+			LOGGER.error("Error saving settings", e);
 			ErrorDialog.openError(getShell(), "Error", "Chyba při ukládání nastavení",
 					new Status(IStatus.ERROR, "cz.doubeon.journalviewer.application", e.getMessage(), e));
 		}

@@ -34,9 +34,10 @@ import javax.persistence.TypedQuery;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.annotations.Creatable;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 import cz.doubeon.journalviewer.parser.ILineIterator;
@@ -48,13 +49,12 @@ import cz.doubeon.journalviewer.punits.Receipt;
 @Singleton
 @Creatable
 public class CashDeskService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CashDeskService.class);
 	private final EMFactoryService emfs;
-	private final Logger logger;
 
 	@Inject
-	public CashDeskService(EMFactoryService emfs, Logger logger) {
+	public CashDeskService(EMFactoryService emfs) {
 		this.emfs = emfs;
-		this.logger = logger;
 	}
 
 	private static String getDescFileName() {
@@ -164,7 +164,7 @@ public class CashDeskService {
 				cashDesks.addAll(em.createNamedQuery("CashDesk.findAll", CashDesk.class).getResultList());
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			logger.error(e);
+			LOGGER.error("Error", e);
 		}
 		return cashDesks;
 	}
@@ -176,26 +176,27 @@ public class CashDeskService {
 			new ProgressMonitorDialog(null).run(true, true, monitor -> {
 				final Map<CashDesk, List<File>> filesToParse = new HashMap<>();
 				int total = 0;
-				for (final CashDesk cashDesk1 : cashDesks) {
-					final List<File> toParse = getJournalsToParse(cashDesk1, em);
+				for (final CashDesk cashDesk : cashDesks) {
+					final List<File> toParse = getJournalsToParse(cashDesk, em);
 					total = total + toParse.size();
-					filesToParse.put(cashDesk1, toParse);
+					filesToParse.put(cashDesk, toParse);
 				}
 				monitor.beginTask("Probíhá import žurnálu", total);
 				try {
-					for (final CashDesk cashDesk2 : cashDesks) {
-						for (final File file : filesToParse.get(cashDesk2)) {
+					for (final CashDesk cashDesk : cashDesks) {
+						for (final File file : filesToParse.get(cashDesk)) {
+							LOGGER.info("Processing file: '" + file + "'");
 							monitor.subTask("Zpracovávám žurnál '" + file.getName() + " z pokladny '"
-									+ cashDesk2.getDescription() + "'");
+									+ cashDesk.getDescription() + "'");
 							em.getTransaction().begin();
 							try {
-								parseJournal(cashDesk2, file, monitor, em);
-							} catch (final IOException e1) {
+								parseJournal(cashDesk, file, monitor, em);
+							} catch (final Exception e) {
 								em.getTransaction().rollback();
-								throw new InvocationTargetException(e1);
-							} catch (final InterruptedException e2) {
-								em.getTransaction().rollback();
-								throw e2;
+								if (e instanceof InterruptedException) {
+									throw (InterruptedException) e;
+								}
+								throw new InvocationTargetException(e);
 							}
 							em.getTransaction().commit();
 							monitor.worked(1);
@@ -208,7 +209,7 @@ public class CashDeskService {
 				}
 			});
 		} catch (final InvocationTargetException e) {
-			logger.error("Error updating journal database", e);
+			LOGGER.error("Error updating journal database", e);
 			MessageDialog.openError(null, "Chyba", "Chyba při aktualizaci databáze žurnálu.");
 		} catch (final InterruptedException e) {
 			MessageDialog.openInformation(null, "Info", "Operace přerušena uživatelem");
@@ -230,7 +231,7 @@ public class CashDeskService {
 				receipts.addAll(query.getResultList());
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
-			logger.error(e);
+			LOGGER.error("Error", e);
 		}
 		return receipts;
 	}
@@ -255,7 +256,7 @@ public class CashDeskService {
 					nextRow = reader.readNext();
 				} catch (final IOException e) {
 					nextRow = null;
-					logger.error("Error reading CSV", e);
+					LOGGER.error("Error reading CSV file!", e);
 				}
 				readNext = true;
 			}
@@ -277,7 +278,7 @@ public class CashDeskService {
 			try {
 				reader.close();
 			} catch (final IOException e) {
-				logger.error("Error closing file", e);
+				LOGGER.warn("Error closing CSV file", e);
 			}
 		}
 	}
