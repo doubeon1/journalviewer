@@ -32,6 +32,7 @@ public class Activator implements BundleActivator {
 		synchronized (Activator.class) {
 			Activator.instance = null;
 		}
+		this.bundleContext = null;
 	}
 
 	public URL getResourceURL(String resPath) {
