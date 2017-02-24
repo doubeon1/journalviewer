@@ -2,7 +2,6 @@ package cz.doubeon.journalviewer.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -16,11 +15,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.doubeon.journalviewer.Activator;
 import cz.doubeon.journalviewer.services.CashDeskService;
 
 public class SplashScreen {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CashDeskService.class);
-	private static final String URL_STRING = "platform:/plugin/cz.doubeon.journalviewer.application/resource/kasa.jpg";
+	private static final String SPLASH_IMAGE = "/resource/kasa.jpg";
 
 	private SplashScreen() {
 	}
@@ -35,7 +35,7 @@ public class SplashScreen {
 		final Label label = new Label(shell, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.UP, false, false));
 		Image img = null;
-		try (InputStream is = new URL(URL_STRING).openStream()) {
+		try (InputStream is = Activator.getInstance().getResourceURL(SPLASH_IMAGE).openStream()) {
 			img = new Image(display, is);
 		} catch (final IOException e) {
 			LOGGER.error("Error loading splash screen", e);

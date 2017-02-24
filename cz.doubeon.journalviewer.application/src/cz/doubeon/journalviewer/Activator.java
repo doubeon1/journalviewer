@@ -6,7 +6,6 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.slf4j.LoggerFactory;
@@ -16,17 +15,30 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 public class Activator implements BundleActivator {
+	private BundleContext bundleContext;
+	private static Activator instance;
+
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		configureLogbackInBundle(bundleContext.getBundle());
+		this.bundleContext = bundleContext;
+		configureLogbackInBundle();
+		synchronized (Activator.class) {
+			Activator.instance = this;
+		}
 	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-		//
+		synchronized (Activator.class) {
+			Activator.instance = null;
+		}
 	}
 
-	private void configureLogbackInBundle(Bundle bundle) throws JoranException, IOException {
+	public URL getResourceURL(String resPath) {
+		return FileLocator.find(bundleContext.getBundle(), new Path(resPath), null);
+	}
+
+	private void configureLogbackInBundle() throws JoranException, IOException {
 		final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 		final JoranConfigurator jc = new JoranConfigurator();
 		jc.setContext(context);
@@ -35,12 +47,13 @@ public class Activator implements BundleActivator {
 		// overriding the log directory property programmatically
 		// in logback.xml use ${LOG_DIR}
 		context.putProperty("LOG_DIR", System.getProperty("java.io.tmpdir"));
-
-		// this assumes that the logback.xml file is in the root of the bundle.
-		final URL logbackConfigFileUrl = FileLocator.find(bundle, new Path("/config/logback.xml"), null);
-		try (InputStream is = logbackConfigFileUrl.openStream()) {
+		try (InputStream is = getResourceURL("config/logback.xml").openStream()) {
 			jc.doConfigure(is);
 		}
+	}
+
+	public static Activator getInstance() {
+		return instance;
 	}
 
 }
