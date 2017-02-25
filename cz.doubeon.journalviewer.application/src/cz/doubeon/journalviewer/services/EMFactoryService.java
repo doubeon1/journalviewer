@@ -36,6 +36,17 @@ public class EMFactoryService {
 		final String dbName = service.getString(AppConstants.PREF_PLUGIN_NAME, AppConstants.PREF_DB_NAME, null, null);
 		properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:derby:" + dbPath + dbName + ";create=true");
 		properties.put(PersistenceUnitProperties.CLASSLOADER, getClass().getClassLoader());
+		properties.put("javax.persistence.jdbc.driver", "org.apache.derby.jdbc.EmbeddedDriver");
+		properties.put("eclipselink.logging.level.sql", "OFF");
+		properties.put("eclipselink.logging.level", "INFO");
+		properties.put("eclipselink.logging.logger", "cz.doubeon.journalviewer.logging.Slf4jSessionLogger");
+		// properties.put("javax.persistence.jdbc.user", "test");
+		// properties.put("javax.persistence.jdbc.password", "test");
+		properties.put("eclipselink.ddl-generation", "create-tables");
+		properties.put("eclipselink.ddl-generation.output-mode", "database");
+		// redirect derby log to slf4j
+		System.getProperties().put("derby.stream.error.method",
+				"cz.doubeon.journalviewer.logging.DerbySlf4jBridge.bridge");
 		LOGGER.info("Initializing database using JDBC URL: " + properties.get(PersistenceUnitProperties.JDBC_URL));
 	}
 
