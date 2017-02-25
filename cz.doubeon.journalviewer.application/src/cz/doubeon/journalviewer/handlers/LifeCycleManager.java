@@ -1,6 +1,6 @@
 package cz.doubeon.journalviewer.handlers;
 
-import static cz.doubeon.journalviewer.AppConstants.TOPIC_CASHDESKS_UPDATED;
+import static cz.doubeon.journalviewer.utils.AppConstants.TOPIC_CASHDESKS_UPDATED;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -8,6 +8,7 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
+import org.eclipse.e4.ui.workbench.lifecycle.PreSave;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -19,12 +20,19 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.doubeon.journalviewer.AppConstants;
 import cz.doubeon.journalviewer.services.CashDeskService;
+import cz.doubeon.journalviewer.services.PreferenceService;
+import cz.doubeon.journalviewer.utils.AppConstants;
 import cz.doubeon.journalviewer.utils.SplashScreen;
 
 public class LifeCycleManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LifeCycleManager.class);
+
+	@PreSave
+	public void done(PreferenceService pref) {
+		LOGGER.info("Trying to save settings");
+		pref.store();
+	}
 
 	@PostContextCreate
 	public void postContextCreate(final IEventBroker eventBroker,

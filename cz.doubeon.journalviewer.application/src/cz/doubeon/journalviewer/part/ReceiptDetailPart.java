@@ -20,10 +20,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import cz.doubeon.journalviewer.AppConstants;
-import cz.doubeon.journalviewer.Formatters;
 import cz.doubeon.journalviewer.punits.Receipt;
 import cz.doubeon.journalviewer.punits.ReceiptItem;
+import cz.doubeon.journalviewer.utils.AppConstants;
+import cz.doubeon.journalviewer.utils.Formatters;
 
 public class ReceiptDetailPart {
 	private Consumer<List<ReceiptItem>> itemSetter = (items) -> {

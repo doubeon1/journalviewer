@@ -28,12 +28,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 
-import cz.doubeon.journalviewer.AppConstants;
-import cz.doubeon.journalviewer.Formatters;
 import cz.doubeon.journalviewer.punits.CashDesk;
 import cz.doubeon.journalviewer.punits.PaymentType;
 import cz.doubeon.journalviewer.punits.Receipt;
 import cz.doubeon.journalviewer.services.CashDeskService;
+import cz.doubeon.journalviewer.utils.AppConstants;
+import cz.doubeon.journalviewer.utils.Formatters;
 
 public class ReceiptListPart {
 	private static final String NOT_AVAILABLE = "n/a";

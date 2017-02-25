@@ -3,12 +3,7 @@ package cz.doubeon.journalviewer.handlers;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -23,25 +18,19 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.osgi.service.prefs.BackingStoreException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import cz.doubeon.journalviewer.AppConstants;
+import cz.doubeon.journalviewer.services.PreferenceService;
 
 public class PreferencesDialog extends TitleAreaDialog {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PreferencesDialog.class);
-
 	private Text txtDbPath;
 	private Text txtDbName;
 	private Text txtJournalPath;
 	private Text txtDescFile;
 
-	private final IEclipsePreferences prefs;
+	private final PreferenceService prefs;
 
 	@Inject
-	public PreferencesDialog(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell,
-			@Preference(nodePath = "cz.doubeon.journalviewer.application") IEclipsePreferences prefs) {
+	public PreferencesDialog(@Named(IServiceConstants.ACTIVE_SHELL) Shell shell, PreferenceService prefs) {
 		super(shell);
 		this.prefs = prefs;
 	}
@@ -74,7 +63,7 @@ public class PreferencesDialog extends TitleAreaDialog {
 
 		txtDbPath = new Text(container, SWT.BORDER);
 		txtDbPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtDbPath.setText(prefs.get(AppConstants.PREF_DB_PATH, System.getProperty("java.io.tmpdir")));
+		txtDbPath.setText(prefs.getDbPath());
 
 		final Button buttDbPath = new Button(container, SWT.NONE);
 		buttDbPath.setText("...");
@@ -93,7 +82,7 @@ public class PreferencesDialog extends TitleAreaDialog {
 
 		txtDbName = new Text(container, SWT.BORDER);
 		txtDbName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtDbName.setText(prefs.get(AppConstants.PREF_DB_NAME, "journals"));
+		txtDbName.setText(prefs.getDbName());
 		new Label(container, SWT.NONE);
 
 		final Label lblJournalPath = new Label(container, SWT.NONE);
@@ -101,7 +90,7 @@ public class PreferencesDialog extends TitleAreaDialog {
 
 		txtJournalPath = new Text(container, SWT.BORDER);
 		txtJournalPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtJournalPath.setText(prefs.get(AppConstants.PREF_JOURNAL_PATH, ""));
+		txtJournalPath.setText(prefs.getRootFolder());
 
 		final Button buttJournalPath = new Button(container, SWT.NONE);
 		buttJournalPath.setText("...");
@@ -120,7 +109,7 @@ public class PreferencesDialog extends TitleAreaDialog {
 
 		txtDescFile = new Text(container, SWT.BORDER);
 		txtDescFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		txtDescFile.setText(prefs.get(AppConstants.PREF_DESC_FILE, "desc"));
+		txtDescFile.setText(prefs.getDescFileName());
 		new Label(container, SWT.NONE);
 
 		return area;
@@ -138,20 +127,10 @@ public class PreferencesDialog extends TitleAreaDialog {
 
 	// zatim bez validace
 	private void saveInput() {
-		// IEclipsePreferences prefs =
-		// InstanceScope.INSTANCE.getNode("cz.doubeon.journalviewer.application");
-		prefs.put(AppConstants.PREF_JOURNAL_PATH, appendSlash(txtJournalPath.getText()));
-		prefs.put(AppConstants.PREF_DB_PATH, appendSlash(txtDbPath.getText()));
-		prefs.put(AppConstants.PREF_DB_NAME, txtDbName.getText());
-		prefs.put(AppConstants.PREF_DESC_FILE, txtDescFile.getText());
-		try {
-			prefs.flush();
-			super.okPressed();
-		} catch (final BackingStoreException e) {
-			LOGGER.error("Error saving settings", e);
-			ErrorDialog.openError(getShell(), "Error", "Chyba při ukládání nastavení",
-					new Status(IStatus.ERROR, "cz.doubeon.journalviewer.application", e.getMessage(), e));
-		}
+		prefs.setRootFolder(appendSlash(txtJournalPath.getText()));
+		prefs.setDbPath(appendSlash(txtDbPath.getText()));
+		prefs.setDbName(txtDbName.getText());
+		prefs.setDescFileName(txtDescFile.getText());
 	}
 
 	@Override

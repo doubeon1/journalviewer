@@ -1,4 +1,4 @@
-package cz.doubeon.journalviewer;
+package cz.doubeon.journalviewer.utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

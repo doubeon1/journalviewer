@@ -13,9 +13,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.doubeon.journalviewer.AppConstants;
 import cz.doubeon.journalviewer.punits.CashDesk;
 import cz.doubeon.journalviewer.services.CashDeskService;
+import cz.doubeon.journalviewer.utils.AppConstants;
 
 public class UpdateHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateHandler.class);

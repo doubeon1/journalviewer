@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import cz.doubeon.journalviewer.AppConstants;
 import cz.doubeon.journalviewer.punits.CashDesk;
+import cz.doubeon.journalviewer.utils.AppConstants;
 import cz.doubeon.journalviewer.utils.CDateTimeObservableValue;
 
 public class CashDeskSelectionPart {

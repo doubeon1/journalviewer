@@ -1,9 +1,5 @@
 package cz.doubeon.journalviewer.services;
 
-import static cz.doubeon.journalviewer.AppConstants.PREF_DESC_FILE;
-import static cz.doubeon.journalviewer.AppConstants.PREF_JOURNAL_PATH;
-import static cz.doubeon.journalviewer.AppConstants.PREF_PLUGIN_NAME;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +28,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -50,19 +45,13 @@ import cz.doubeon.journalviewer.punits.Receipt;
 @Creatable
 public class CashDeskService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CashDeskService.class);
+	private final PreferenceService prefs;
 	private final EMFactoryService emfs;
 
 	@Inject
-	public CashDeskService(EMFactoryService emfs) {
+	public CashDeskService(EMFactoryService emfs, PreferenceService prefs) {
 		this.emfs = emfs;
-	}
-
-	private static String getDescFileName() {
-		return Platform.getPreferencesService().getString(PREF_PLUGIN_NAME, PREF_DESC_FILE, null, null);
-	}
-
-	private static String getRootFolder() {
-		return Platform.getPreferencesService().getString(PREF_PLUGIN_NAME, PREF_JOURNAL_PATH, null, null);
+		this.prefs = prefs;
 	}
 
 	private static List<File> getDirectoryContent(File folder) {
@@ -82,7 +71,7 @@ public class CashDeskService {
 				.getResultList()
 				.stream()
 				.collect(Collectors.toMap(JournalFile::getFileNameUpper, Function.identity()));
-		return getDirectoryContent(new File(getRootFolder(), cashDesk.getCsvFolder()))
+		return getDirectoryContent(new File(prefs.getRootFolder(), cashDesk.getCsvFolder()))
 				.stream()
 				.filter(file -> !map.containsKey(file.getName().toUpperCase()))
 				.collect(Collectors.toList());
@@ -107,7 +96,7 @@ public class CashDeskService {
 	}
 
 	private List<String> getFolders() throws FileNotFoundException {
-		final File file = new File(getRootFolder());
+		final File file = new File(prefs.getRootFolder());
 		final String[] directories = file.list((dir, name) -> new File(dir, name).isDirectory());
 		if (directories == null) {
 			throw new FileNotFoundException("Adresář " + file.getAbsolutePath() + " neexistuje.");
@@ -118,7 +107,7 @@ public class CashDeskService {
 	private List<CashDesk> scanCashDesks(List<String> folders) throws IOException {
 		final List<CashDesk> cashDesks = new ArrayList<>();
 		for (final String folder : folders) {
-			final File descFile = new File(getRootFolder() + File.separator + folder, getDescFileName());
+			final File descFile = new File(prefs.getRootFolder() + File.separator + folder, prefs.getDescFileName());
 			if (!descFile.exists()) {
 				continue;
 			}

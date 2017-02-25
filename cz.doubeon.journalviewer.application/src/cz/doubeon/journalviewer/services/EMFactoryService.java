@@ -4,37 +4,34 @@ import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.EntityManagerFactory;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.jpa.PersistenceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.doubeon.journalviewer.AppConstants;
-
 @Singleton
 @Creatable
 public class EMFactoryService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EMFactoryService.class);
 	private static final String PERSISTENCE_UNIT_NAME = "parser";
-	private EntityManagerFactory factory;
 	private final HashMap<Object, Object> properties = new HashMap<>();
+	private final PreferenceService pref;
+	private EntityManagerFactory factory;
 
-	public EMFactoryService() {
-		//
+	@Inject
+	public EMFactoryService(PreferenceService pref) {
+		this.pref = pref;
 	}
 
 	@PostConstruct
 	public void loadSettings() {
-		final IPreferencesService service = Platform.getPreferencesService();
-		final String dbPath = service.getString(AppConstants.PREF_PLUGIN_NAME, AppConstants.PREF_DB_PATH, null, null);
-		final String dbName = service.getString(AppConstants.PREF_PLUGIN_NAME, AppConstants.PREF_DB_NAME, null, null);
-		properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:derby:" + dbPath + dbName + ";create=true");
+		properties.put(PersistenceUnitProperties.JDBC_URL,
+				"jdbc:derby:" + pref.getDbPath() + pref.getDbName() + ";create=true");
 		properties.put(PersistenceUnitProperties.CLASSLOADER, getClass().getClassLoader());
 		properties.put("javax.persistence.jdbc.driver", "org.apache.derby.jdbc.EmbeddedDriver");
 		properties.put("eclipselink.logging.level.sql", "OFF");
